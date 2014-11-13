@@ -1,0 +1,34 @@
+defaultTasks 'intro', 'theEnd'
+
+ext {
+    teaser = null
+}
+
+
+task hello {
+     doLast {
+     	    println 'Hello World!'
+	    ext.question = 'What is your name?'
+     }
+}
+
+task helloAlt << {
+     println "Hello World!\n$teaser"
+}
+
+task intro(dependsOn:hello) << {
+     println hello.question
+     println "I'm Gradle."
+}
+
+task theEnd << {
+     println "The end. $teaser"
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(helloAlt)) {
+        teaser = 'I just wanted to say that.'
+    } else {
+        teaser = 'For now... Muah haahahahaha!'
+    }
+}

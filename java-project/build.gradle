@@ -1,0 +1,55 @@
+// For java support
+apply plugin: 'java'
+
+// For eclipse support ("gradle eclipse" to generate project files)
+apply plugin: 'eclipse'
+
+
+task wrapper(type: Wrapper) { 
+  gradleVersion = '2.2'
+}
+
+
+repositories { 
+  // this is where we will fetch dependencies from
+  mavenCentral()
+}
+
+
+dependencies {
+  // our production classes have compile time dependencies on common-collections
+  compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+  
+  // test code has compile time dependency on junit
+  testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+
+// customize the MANIFEST.MF file for the jar
+sourceCompatibility = 1.5
+version = '0.1'
+jar { 
+  manifest { 
+    attributes 'Implementation-Title': 'Gradle Tutorial',
+	     'Implementation-Version': version,
+	     'Main-Class': 'com.jeromestepp.example.main'
+  }
+}
+
+
+// Add a property to the existing task "Test" (defined in java plugin)
+test { 
+  systemProperties 'testProperty': 'testValue'
+}
+
+
+// Here, we publish to a directory (but you can publish remotely or to repositories)
+uploadArchives { 
+  repositories { 
+    flatDir { 
+      dirs 'repos'
+    }
+  }
+}
+
+
